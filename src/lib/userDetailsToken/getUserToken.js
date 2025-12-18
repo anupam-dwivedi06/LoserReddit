@@ -30,6 +30,7 @@ export async function getAuthenticatedUser() {
     return {
       username: user.username,
       email: user.email,
+      id: user._id.toString(),
     };
   } catch (error) {
     console.error("Authentication check failed!", error.message);

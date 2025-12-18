@@ -72,7 +72,9 @@ const Navbar = ({ user }) => {
               
               {user && user.username ? (
                 <>
+                <Link href="/pages/profilepage" onClick={() => setisOpen(false)}>
                   <span className="text-blue-100 italic">Welcome {user.username}</span>
+                  </Link>
                   <button 
                     onClick={handleLogout}
                     className="w-full bg-red-500 p-2 rounded"
