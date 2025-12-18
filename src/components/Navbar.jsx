@@ -23,7 +23,9 @@ const Navbar = ({ user }) => {
     <nav className="bg-blue-600 text-white p-5 sticky top-0 z-50">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <div>
+          <Link href="/">
           <h2 className="text-xl font-bold">Data Fetch</h2>
+          </Link>
         </div>
 
         {/* Desktop Menu */}
@@ -68,7 +70,7 @@ const Navbar = ({ user }) => {
               
               {user && user.username ? (
                 <>
-                  <span className="text-blue-100 italic">Logged in as {user.username}</span>
+                  <span className="text-blue-100 italic">Welcome {user.username}</span>
                   <button 
                     onClick={handleLogout}
                     className="w-full bg-red-500 p-2 rounded"
