@@ -9,14 +9,11 @@ const page = async () => {
         <div className='mx-auto w-4/5 bg-amber-200 p-4 rounded-2xl'>
             <h1 className='text-center text-white text-4xl md:text-4xl font-bold'>Welcome {user.username}</h1>
             <div>
-                <div>
-                    <span>email : </span> <p>{user.email}</p>
+                <div className='flex text-white'>
+                    <span calssName='font-semibold'>email : </span> <p>{user.email}</p>
                 </div>
-                <div>
+                <div >
                     <span>username : </span> <p>{user.username}</p>
-                </div>
-                <div>
-                    <span>userId : </span> <p>{user._id}</p>
                 </div>
             </div>
         </div>
