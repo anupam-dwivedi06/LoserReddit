@@ -30,7 +30,7 @@ export async function getAuthenticatedUser() {
     return {
       username: user.username,
       email: user.email,
-      // id: user._id.toString(), you can't access it , because you not added id in token then how can you extract it
+      id: user._id.toString(), //you can't access it , because you not added id in token then how can you extract it
     };
   } catch (error) {
     console.error("Authentication check failed!", error.message);
