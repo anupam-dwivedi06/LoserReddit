@@ -1,96 +1,114 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Search, Bell, Plus, LogOut, Menu, X, Layers } from "lucide-react";
 
 const Navbar = ({ user }) => {
   const [isOpen, setisOpen] = useState(false);
   const router = useRouter();
 
-  // Function to handle Logout
   const handleLogout = async () => {
-    try {
-      // We call an API route to clear the cookie
-      await fetch("/api/auth/logout", { method: "POST" });
-      setisOpen(false);
-      router.refresh(); // Refresh the page to update the Server Component (layout.js)
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.refresh();
+    router.push("/");
   };
 
   return (
-    <nav className="bg-blue-600 text-white p-5 sticky top-0 z-50">
-      <div className="flex justify-between items-center max-w-7xl mx-auto">
-        <div>
-          <Link href="/">
-          <h2 className="text-xl font-bold">Data Fetch</h2>
+    <nav className="w-full bg-[#0B0E14] border-b border-white/5 sticky top-0 z-50">
+      <div className="max-w-[1400px] mx-auto px-4 h-16 flex items-center justify-between">
+        
+        {/* Left: Brand & Links */}
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="bg-red-600 p-1.5 rounded-lg">
+              <Layers size={18} className="text-white" />
+            </div>
+            <h2 className="text-white font-bold text-xl tracking-tighter">
+              Lose<span className="text-red-500">Reddit</span>
+            </h2>
           </Link>
-        </div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center">
-          <ul className="flex gap-6 items-center">
-            <Link href="/"><li>Home</li></Link>
-            <Link href="/second"><li>Second</li></Link>
-
-            {user && user.username ? (
-              <div className="flex items-center gap-4">
-                <Link href="/pages/profilepage">
-                <span className="bg-blue-700 px-3 py-1 rounded-full text-sm">
-                  Welcome, {user.username}
-                </span>
-                </Link>
-                <button 
-                  onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm transition"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <Link href="/auth/login" className="bg-white text-blue-600 px-4 py-1 rounded font-medium">
-                Login
-              </Link>
-            )}
-          </ul>
-        </div>
-
-        {/* Mobile Toggle */}
-        <button
-          onClick={() => setisOpen(!isOpen)}
-          className="md:hidden text-white text-3xl focus:outline-none"
-        >
-          {isOpen ? "✕" : "☰"}
-        </button>
-
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-blue-500 border-t border-blue-400 p-5 shadow-lg">
-            <ul className="flex flex-col gap-5 items-center">
-              <Link href="/" onClick={() => setisOpen(false)}><li>Home</li></Link>
-              
-              {user && user.username ? (
-                <>
-                <Link href="/pages/profilepage" onClick={() => setisOpen(false)}>
-                  <span className="text-blue-100 italic">Welcome {user.username}</span>
-                  </Link>
-                  <button 
-                    onClick={handleLogout}
-                    className="w-full bg-red-500 p-2 rounded"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Link href="/auth/login" onClick={() => setisOpen(false)}>
-                  <li className="bg-white text-blue-600 px-6 py-2 rounded">Login</li>
-                </Link>
-              )}
-            </ul>
+          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-400">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <Link href="/popular" className="hover:text-white transition-colors">Popular</Link>
+            <Link href="/explore" className="hover:text-white transition-colors">Explore</Link>
           </div>
-        )}
+        </div>
+
+        {/* Middle: Search Bar (The "Reddit" look) */}
+        <div className="hidden lg:flex flex-1 max-w-md mx-8">
+          <div className="relative w-full group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-red-500 transition-colors" size={18} />
+            <input 
+              type="text" 
+              placeholder="Search LoseReddit"
+              className="w-full bg-[#1A1D23] border border-transparent focus:border-red-500/50 focus:bg-[#22252C] text-gray-200 text-sm rounded-full py-2 pl-10 pr-4 outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        {/* Right: User Actions */}
+        <div className="flex items-center gap-3">
+          {user ? (
+            <>
+              <button className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all">
+                <Plus size={22} />
+              </button>
+              <button className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all">
+                <Bell size={22} />
+              </button>
+              
+              {/* Profile Dropdown Trigger */}
+              <Link href="/pages/profilepage" className="flex items-center gap-2 ml-2 p-1 pr-3 hover:bg-white/5 rounded-full border border-white/10 transition-all">
+                <div className="w-7 h-7 bg-gradient-to-tr from-red-500 to-orange-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold">
+                  {user.username?.charAt(0).toUpperCase()}
+                </div>
+                <div className="hidden sm:block text-left">
+                  <p className="text-[11px] text-gray-500 leading-none">Profile</p>
+                  <p className="text-xs text-gray-200 font-bold leading-tight">{user.username}</p>
+                </div>
+              </Link>
+
+              <button onClick={handleLogout} className="hidden sm:flex p-2 text-gray-500 hover:text-red-500 rounded-full">
+                <LogOut size={18} />
+              </button>
+            </>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link href="/auth/login" className="text-sm font-bold text-gray-400 hover:text-white px-4 py-2">
+                Log In
+              </Link>
+              <Link href="/auth/signup" className="text-sm font-bold bg-white text-black px-5 py-2 rounded-full hover:bg-gray-200 transition-all">
+                Sign Up
+              </Link>
+            </div>
+          )}
+
+          {/* Mobile Menu Button */}
+          <button onClick={() => setisOpen(!isOpen)} className="md:hidden p-2 text-gray-400">
+            {isOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu Drawer */}
+      {isOpen && (
+        <div className="md:hidden bg-[#0B0E14] border-t border-white/5 p-4 space-y-4">
+          <input 
+            type="text" 
+            placeholder="Search..." 
+            className="w-full bg-[#1A1D23] rounded-lg p-3 text-sm text-white"
+          />
+          <div className="flex flex-col gap-4 text-gray-400 font-medium">
+            <Link href="/" onClick={() => setisOpen(false)}>Home</Link>
+            <Link href="/explore" onClick={() => setisOpen(false)}>Explore</Link>
+            {user && (
+              <button onClick={handleLogout} className="text-red-500 text-left">Logout</button>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

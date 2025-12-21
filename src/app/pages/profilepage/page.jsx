@@ -1,75 +1,87 @@
 import React from "react";
 import { getAuthenticatedUser } from "../../../lib/userDetailsToken/getUserToken";
 import Link from "next/link";
-import { User, Mail, Fingerprint, Settings2 } from "lucide-react"; // Optional: icons make it look much better
+import { User, Mail, Fingerprint, Settings2, ShieldCheck } from "lucide-react";
 
 const ProfilePage = async () => {
   const user = await getAuthenticatedUser();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+    <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center p-6 pt-24">
+      <div className="max-w-2xl w-full bg-[#11141B] rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/5">
         
-        {/* Header Section with Gradient */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-10 text-center">
-          <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-white/50">
-            <span className="text-4xl text-white font-bold uppercase">
-              {user.username?.charAt(0)}
-            </span>
+        {/* Header Section: Dark Gradient & Brand Accent */}
+        <div className="relative bg-gradient-to-br from-[#1A1D23] to-[#0B0E14] p-12 text-center border-b border-white/5">
+          {/* Red Glow Effect */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-red-600/20 blur-[60px] rounded-full"></div>
+          
+          <div className="relative">
+            <div className="w-28 h-28 bg-gradient-to-tr from-red-600 to-red-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-red-900/20 border-4 border-[#11141B]">
+              <span className="text-5xl text-white font-black uppercase">
+                {user.username?.charAt(0)}
+              </span>
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tighter">
+              {user.username}
+            </h1>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <ShieldCheck size={16} className="text-red-500" />
+              <p className="text-gray-400 text-sm font-medium uppercase tracking-widest">Verified Member</p>
+            </div>
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">
-            Welcome, {user.username}
-          </h1>
-          <p className="text-blue-100 mt-2">Personal Profile Overview</p>
         </div>
 
         {/* Content Section */}
-        <div className="p-8 md:p-12">
-          <div className="grid gap-6">
+        <div className="p-8 md:p-12 bg-[#11141B]">
+          <div className="grid gap-4">
             
             {/* Email Field */}
-            <div className="flex items-center p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-blue-200 transition-colors">
-              <div className="bg-blue-100 p-3 rounded-xl mr-4 text-blue-600">
-                <Mail size={20} />
+            <div className="group flex items-center p-5 bg-[#1A1D23] rounded-3xl border border-white/5 hover:border-red-500/30 transition-all duration-300">
+              <div className="bg-red-500/10 p-3.5 rounded-2xl mr-5 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
+                <Mail size={22} />
               </div>
-              <div>
-                <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Email Address</p>
-                <p className="text-gray-700 font-medium">{user.email}</p>
+              <div className="flex-1">
+                <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Email Address</p>
+                <p className="text-gray-200 font-semibold">{user.email}</p>
               </div>
             </div>
 
             {/* Username Field */}
-            <div className="flex items-center p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-blue-200 transition-colors">
-              <div className="bg-indigo-100 p-3 rounded-xl mr-4 text-indigo-600">
-                <User size={20} />
+            <div className="group flex items-center p-5 bg-[#1A1D23] rounded-3xl border border-white/5 hover:border-red-500/30 transition-all duration-300">
+              <div className="bg-red-500/10 p-3.5 rounded-2xl mr-5 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
+                <User size={22} />
               </div>
-              <div>
-                <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Username</p>
-                <p className="text-gray-700 font-medium">{user.username}</p>
+              <div className="flex-1">
+                <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Display Name</p>
+                <p className="text-gray-200 font-semibold">@{user.username}</p>
               </div>
             </div>
 
             {/* User ID Field */}
-            <div className="flex items-center p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-blue-200 transition-colors">
-              <div className="bg-purple-100 p-3 rounded-xl mr-4 text-purple-600">
-                <Fingerprint size={20} />
+            <div className="group flex items-center p-5 bg-[#1A1D23] rounded-3xl border border-white/5 hover:border-red-500/30 transition-all duration-300">
+              <div className="bg-red-500/10 p-3.5 rounded-2xl mr-5 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
+                <Fingerprint size={22} />
               </div>
-              <div>
-                <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">User ID</p>
-                <p className="text-gray-700 font-mono text-sm text-gray-500">{user.id}</p>
+              <div className="flex-1">
+                <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Identity Token</p>
+                <p className="text-gray-400 font-mono text-xs truncate max-w-[200px]">{user.id}</p>
               </div>
             </div>
 
           </div>
 
           {/* Action Button */}
-          <div className="mt-10">
+          <div className="mt-12">
             <Link href="/pages/profilepageupdate">
-              <button className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold py-4 rounded-2xl transition-all shadow-lg active:scale-[0.98]">
-                <Settings2 size={18} />
-                Update Profile Settings
+              <button className="w-full flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 text-white font-bold py-5 rounded-3xl transition-all shadow-lg shadow-red-900/20 active:scale-[0.97] group">
+                <Settings2 size={20} className="group-hover:rotate-90 transition-transform duration-500" />
+                Edit Profile Settings
               </button>
             </Link>
+            
+            <p className="text-center text-gray-600 text-[11px] mt-6 font-medium uppercase tracking-tighter">
+              LoseReddit Security Protocol Enabled
+            </p>
           </div>
         </div>
       </div>
