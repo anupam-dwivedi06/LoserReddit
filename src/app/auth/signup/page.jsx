@@ -1,23 +1,21 @@
 "use client";
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Mail, Lock, User, ArrowRight, Loader2, Layers, AlertCircle } from "lucide-react";
 
-// Use PascalCase for component name (SignUp)
 function SignUp() {
   const router = useRouter();
 
   const [formdata, setFormdata] = useState({
-    // Use consistent camelCase
     username: "",
     email: "",
     password: "",
   });
 
-  const [isLoading, setIsLoading] = useState(false); // Use consistent camelCase
-  const [error, setError] = useState(null); // Added state for error message
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // 1. FIXED: Correctly update state (removed array brackets)
   const handlechange = (e) => {
     setFormdata({
       ...formdata,
@@ -28,107 +26,145 @@ function SignUp() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null); // Clear previous errors
+    setError(null);
 
     try {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formdata),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        // 3. FIXED: Concatenate error messages and throw
-        throw new Error(
-          errorData.msg || `Sign up failed with status: ${response.status}`
-        );
+        throw new Error(errorData.msg || `Sign up failed: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log("Sign up successful", result.msg);
-      setFormdata({
-        username: "",
-        email: "",
-        password: ""
-      });
-      // Redirect to the login page on success
       router.push("/auth/login");
     } catch (err) {
-      console.error("Sign up fail:", err.message);
-      setError(err.message); // 3. FIXED: Set the error state to display to the user
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="p-2 mt-5 flex flex-col items-center gap-5">
-        <div className="p-4">
-          <h2 className="text-center text-3xl md:text-4xl text-pink-600 font-bold">
-            Sign Up
+    <div className="min-h-screen bg-[#0B0E14] flex items-center justify-center p-6 pt-24">
+      {/* Background Glow */}
+      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-red-600/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+      <div className="max-w-md w-full relative">
+        {/* Logo Section */}
+        <div className="text-center mb-10">
+          <div className="bg-red-600 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-red-900/20">
+            <Layers size={28} className="text-white" />
+          </div>
+          <h2 className="text-3xl font-black text-white tracking-tighter">
+            Join <span className="text-red-500">LoseReddit</span>
           </h2>
+          <p className="text-gray-400 mt-2 font-medium">Create an account to start sharing.</p>
         </div>
-        <form
-          onSubmit={handlesubmit}
-          className="p-4 bg-amber-100 rounded-md w-full md:w-1/4"
-        >
-          {/* Display Error Message */}
-          {error && <p className="text-red-600 text-center mb-4">{error}</p>}
 
-          <div className="flex flex-col gap-2 p-2">
-            <label htmlFor="username" className="font-semibold text-purple-500">
-              Username
-            </label>
-            <input
-              type="text"
-              className="border rounded border-brown-800 indent-4 p-1"
-              name="username" // 2. FIXED: Changed from 'userName' to 'username'
-              value={formdata.username}
-              onChange={handlechange}
-              required
-            />
-            {/* Grouped email input correctly */}
-            <label htmlFor="email" className="font-semibold text-purple-500">
-              Email
-            </label>
-            <input
-              type="email" // Use type="email"
-              className="border rounded border-brown-800 indent-4 p-1"
-              name="email"
-              value={formdata.email}
-              onChange={handlechange}
-              required
-            />
-          </div>
+        {/* Form Card */}
+        <div className="bg-[#11141B] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
+          <form onSubmit={handlesubmit} className="space-y-5">
+            
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl flex items-center gap-3 text-red-500 text-sm">
+                <AlertCircle size={18} />
+                <p>{error}</p>
+              </div>
+            )}
 
-          <div className="flex flex-col gap-2 p-2">
-            <label htmlFor="password" className="font-semibold text-purple-500">
-              Password
-            </label>
-            <input
-              type="password" // Use type="password" for security
-              className="border rounded border-brown-800 indent-4 p-1"
-              name="password"
-              value={formdata.password}
-              onChange={handlechange}
-              required
-            />
-          </div>
+            {/* Username Field */}
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-widest font-black text-gray-500 ml-1">
+                Username
+              </label>
+              <div className="relative group">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-red-500 transition-colors" size={18} />
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="johndoe"
+                  value={formdata.username}
+                  onChange={handlechange}
+                  className="w-full bg-[#1A1D23] border border-white/5 focus:border-red-500/50 text-white rounded-2xl py-4 pl-12 pr-4 outline-none transition-all placeholder:text-gray-600"
+                  required
+                />
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            className="bg-amber-600 py-2 px-5 text-white rounded"
-            disabled={isLoading}
-          >
-            {isLoading ? "Signing Up..." : "Sign Up"}
-          </button>
-        </form>
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-widest font-black text-gray-500 ml-1">
+                Email Address
+              </label>
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-red-500 transition-colors" size={18} />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="name@example.com"
+                  value={formdata.email}
+                  onChange={handlechange}
+                  className="w-full bg-[#1A1D23] border border-white/5 focus:border-red-500/50 text-white rounded-2xl py-4 pl-12 pr-4 outline-none transition-all placeholder:text-gray-600"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-widest font-black text-gray-500 ml-1">
+                Password
+              </label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-red-500 transition-colors" size={18} />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  value={formdata.password}
+                  onChange={handlechange}
+                  className="w-full bg-[#1A1D23] border border-white/5 focus:border-red-500/50 text-white rounded-2xl py-4 pl-12 pr-4 outline-none transition-all placeholder:text-gray-600"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              disabled={isLoading}
+              type="submit"
+              className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-800/50 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-red-900/20 active:scale-[0.98] mt-2"
+            >
+              {isLoading ? (
+                <Loader2 className="animate-spin" size={20} />
+              ) : (
+                <>
+                  Create Account <ArrowRight size={18} />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+
+        {/* Footer Link */}
+        <div className="text-center mt-8">
+          <p className="text-gray-500 text-sm">
+            Already a member?{" "}
+            <Link 
+              href="/auth/login" 
+              className="text-red-500 font-bold hover:text-red-400 transition-colors"
+            >
+              Sign in to your account
+            </Link>
+          </p>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 
