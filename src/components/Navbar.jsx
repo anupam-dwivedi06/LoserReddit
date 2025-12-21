@@ -53,7 +53,7 @@ const Navbar = ({ user }) => {
           
           {/* All Posts Option */}
           <Link 
-            href="/pages/allpostme" 
+            href="/pages/getAllPostsMe" 
             className="hidden sm:flex items-center gap-2 text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full transition-all text-sm font-medium border border-white/5"
           >
             <LayoutGrid size={16} />
