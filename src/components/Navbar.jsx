@@ -32,7 +32,7 @@ const Navbar = ({ user }) => {
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-400">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <Link href="/popular" className="hover:text-white transition-colors">Popular</Link>
-            <Link href="/explore" className="hover:text-white transition-colors">Explore</Link>
+            <Link href="/pages/post" className="hover:text-white transition-colors">Post</Link>
           </div>
         </div>
 
@@ -102,7 +102,7 @@ const Navbar = ({ user }) => {
           />
           <div className="flex flex-col gap-4 text-gray-400 font-medium">
             <Link href="/" onClick={() => setisOpen(false)}>Home</Link>
-            <Link href="/explore" onClick={() => setisOpen(false)}>Explore</Link>
+            <Link href="/pages/post" onClick={() => setisOpen(false)}>Post</Link>
             {user && (
               <button onClick={handleLogout} className="text-red-500 text-left">Logout</button>
             )}
