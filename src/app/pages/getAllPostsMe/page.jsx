@@ -21,7 +21,9 @@ const GetAllPostsMe = () => {
   useEffect(() => {
     const fetchMyPosts = async () => {
       try {
-        const res = await fetch("/api/storypost/myposts");
+        const res = await fetch("/api/storypost/myallposts",{
+          credentials:"include",
+        });
         const data = await res.json();
         setPosts(data.posts || []);
       } catch (err) {

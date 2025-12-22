@@ -3,7 +3,7 @@ import Story from "@/lib/schema/StorySchema";
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db/Mongodb";
 
-export default async function GET(req) {
+export async function GET(req) {
     await dbConnect();
 
    try {
@@ -11,16 +11,18 @@ export default async function GET(req) {
     if(!user){
         return NextResponse.json({
             msg:"There is no user found in the myallpost route"
-        }, {status:500})
+        }, {status:401})
     }
 
     const userId = user.id;
+    console.log("UserId comes from the MY All Posts Route",userId);
 
-    const AllStories = Story.find({auther: userId}).sort({createdAt: -1});
+    const AllStories = await Story.find({auther: userId}).sort({createdAt: -1});
+    console.log(AllStories);
 
     return NextResponse.json({
         success: true,
-        AllStories
+        posts: AllStories
     }, {status:200})
    } catch (error) {
     return NextResponse.json({

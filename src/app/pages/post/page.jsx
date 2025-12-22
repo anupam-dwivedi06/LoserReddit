@@ -9,7 +9,7 @@ const CreateStoryPage = () => {
   const [value, setValue] = useState({
     title: "",
     story: "",
-    category: "",
+    category: "", 
   });
 
   const handlechange = (e) => {
@@ -24,7 +24,7 @@ const CreateStoryPage = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/storypost", {
+      const res = await fetch("/api/storypost/newstorypost", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(value),
@@ -34,7 +34,7 @@ const CreateStoryPage = () => {
 
       if (res.ok) {
         alert("Story shared successfully!");
-        router.push("/pages/allpostme");
+        router.push("/pages/getAllPostsMe");
         router.refresh();
       } else {
         alert(data.msg || "Post failed");

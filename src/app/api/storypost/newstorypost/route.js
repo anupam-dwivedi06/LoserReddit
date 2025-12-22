@@ -5,19 +5,21 @@ import User from '@/lib/schema/UserSchema';
 import Story from "@/lib/schema/StorySchema"
 import { NextResponse } from 'next/server';
 
-export default async function POST(req) {
+export async function POST(req) {
 
     await dbConnect();
     try {
         
-    const user = getAuthenticatedUser();
+    const user = await getAuthenticatedUser();
+    // console.log(user);
     if(!user){
         return NextResponse.json({
             msg:"There is no user login ! error comes from the StoryPost route"
-        }, {status:500})
+        }, {status:401})
     }
     const userId = user.id;
-    const {title, story, category} = req.json();
+    console.log(userId);
+    const {title, story, category} = await req.json();
 
     const newStory  = await Story.create({
         title: title,
@@ -35,8 +37,10 @@ export default async function POST(req) {
     return NextResponse.json({
         success: true,
         newStory,
-    })
-    } catch (error) {
+    }, {status:200})
+
+    }
+     catch (error) {
         return NextResponse.json({
             msg: "Fail to add new story"
         }, {status:500})
