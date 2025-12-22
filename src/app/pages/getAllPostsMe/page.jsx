@@ -96,7 +96,7 @@ const GetAllPostsMe = () => {
                     </div>
                     
                     <div className="flex items-center justify-end">
-                      <Link href={`/pages/post/${post._id}`} className="p-4 bg-white/5 rounded-2xl text-gray-400 hover:bg-red-600 hover:text-white transition-all">
+                      <Link href={`/pages/idpost/${post._id}`} className="p-4 bg-white/5 rounded-2xl text-gray-400 hover:bg-red-600 hover:text-white transition-all">
                         <ChevronRight size={20} />
                       </Link>
                     </div>
