@@ -55,7 +55,7 @@ const CategoryPage = () => {
           <div className="grid gap-6">
             {stories.map((story) => (
               <Link 
-                href={`/pages/idpost/${story._id}`} 
+                href={`/pages/idpostuser/${story._id}`} 
                 key={story._id}
                 className="block bg-[#11141B] border border-white/5 p-8 rounded-[2rem] hover:border-red-500/30 transition-all group shadow-xl"
               >
