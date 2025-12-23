@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Loader2, ArrowLeft, Tag, Calendar } from "lucide-react";
+import { Loader2, ArrowLeft, Tag, Calendar, Trash2 } from "lucide-react";
 
 const SingleStoryPage = () => {
   const { id } = useParams();
@@ -37,6 +37,26 @@ const SingleStoryPage = () => {
 
     fetchStory();
   }, [id]);
+
+  const handledelete = async () =>{
+    try {
+      const res = await fetch(`/api/storypost/storydelete/${id}`,{
+        method: "DELETE" 
+      }, {credentials:"include"});
+      // console.log("res comes from the handledelte", res)
+      const data = await res.json();
+      // console.log("Data comes from the delete route",data);
+      if(!res.ok){
+        throw new Error("Fail to fetch storydelete route", data.msg);
+      }
+
+      router.push("/pages/getAllPostsMe");
+      router.refresh();
+      console.log(data);
+    } catch (error) {
+      console.log("Fail to delete story from the fetch story delete", error.msg);
+    }
+  }
 
   if (loading) {
     return (
@@ -87,6 +107,15 @@ const SingleStoryPage = () => {
             </p>
           </div>
         </article>
+        <div className="mt-8 flex justify-end">
+          <button 
+            onClick={handledelete}
+            className="flex items-center gap-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 px-6 py-3 rounded-2xl transition-all font-bold text-sm border border-transparent hover:border-red-500/20"
+          >
+            <Trash2 size={18} />
+            Delete Story
+          </button>
+        </div>
       </div>
     </div>
   );

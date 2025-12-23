@@ -47,6 +47,7 @@ const Home = () => {
     },
   ]
 
+
   return (
     <div className="min-h-screen bg-[#0B0E14] p-8 pt-24"> {/* Added padding top for the fixed navbar */}
       <div className="max-w-6xl mx-auto">
