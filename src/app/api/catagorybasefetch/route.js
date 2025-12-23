@@ -6,8 +6,8 @@ export async function GET(req) {
   await dbConnect();
 
   try {
-    const { SearchParams } = new URL(req.url);
-    const category = SearchParams.get("category");
+    const { searchParams } =  new URL(req.url);
+    const category = searchParams.get("category");
 
     let query = {};
     if (category && category !== "All") {

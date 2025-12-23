@@ -1,7 +1,11 @@
+"use client";
 import React from 'react'
+import { useRouter } from 'next/navigation';
 import { Frown, Laugh, MessageCircleQuestion, Megaphone, Lock, Coffee } from 'lucide-react'
 
 const Home = () => {
+  const router = useRouter();
+
   const categories = [
     { 
       id: 1, 
@@ -12,21 +16,21 @@ const Home = () => {
     },
     { 
       id: 2, 
-      name: "Funny / Embarrassing", 
+      name: "Funny", 
       icon: <Laugh />, 
       color: "from-yellow-600 to-orange-700", 
       description: "Share your best 'can't believe that happened' moments." 
     },
     { 
       id: 3, 
-      name: "Question / Advice", 
+      name: "Advice", 
       icon: <MessageCircleQuestion />, 
       color: "from-emerald-600 to-teal-900", 
       description: "Seek wisdom or ask the community anything." 
     },
     { 
       id: 4, 
-      name: "Rant / Vent", 
+      name: "Rant", 
       icon: <Megaphone />, 
       color: "from-red-700 to-red-950", 
       description: "Let it all out. We are listening." 
@@ -47,9 +51,13 @@ const Home = () => {
     },
   ]
 
+  const handleCategoryClick = (name) => {
+    // Navigates to the dynamic category page
+    router.push(`/pages/category/${encodeURIComponent(name)}`);
+  };
 
   return (
-    <div className="min-h-screen bg-[#0B0E14] p-8 pt-24"> {/* Added padding top for the fixed navbar */}
+    <div className="min-h-screen bg-[#0B0E14] p-8 pt-24">
       <div className="max-w-6xl mx-auto">
         <header className="mb-12 border-l-4 border-red-600 pl-6">
           <h1 className="text-4xl font-black text-white mb-2 tracking-tight">
@@ -63,10 +71,11 @@ const Home = () => {
           {categories.map((category) => (
             <div 
               key={category.id} 
+              onClick={() => handleCategoryClick(category.name)}
               className={`relative group overflow-hidden rounded-3xl border border-white/5 p-8 bg-gradient-to-br ${category.color} cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/10`}
             >
               {/* Giant Background Icon for Texture */}
-              <div className="absolute right-[-5%] bottom-[-5%] text-white/5 group-hover:text-white/10 transition-all duration-700 scale-[4] rotate-12">
+              <div className="absolute right-[-5%] bottom-[-5%] text-white/5 group-hover:text-white/10 transition-all duration-700 scale-[4] rotate-12 pointer-events-none">
                 {category.icon}
               </div>
 
@@ -93,4 +102,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Home;  
