@@ -20,6 +20,13 @@ const UserSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref:"Story"
       }
+    ],
+
+    likestore:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Story",
+      }
     ]
   },
   

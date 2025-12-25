@@ -21,6 +21,14 @@ const StorySchema = new mongoose.Schema(
             ref:"User",
             required: true,
         }
+    ],
+
+    like:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"User",
+            required: true,
+        }
     ]
 
 }, {timestamp: true})
