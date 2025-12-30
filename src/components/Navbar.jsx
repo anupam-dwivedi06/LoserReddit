@@ -25,7 +25,7 @@ const Navbar = ({ user }) => {
               <Layers size={18} className="text-white" />
             </div>
             <h2 className="text-white font-bold text-xl tracking-tighter">
-              Lose<span className="text-red-500">Reddit</span>
+              Lose<span className="text-red-500"><span className="">R</span>eddit</span>
             </h2>
           </Link>
 
