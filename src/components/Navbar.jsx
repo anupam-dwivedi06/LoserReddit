@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, LogOut, Menu, X, Layers, LayoutGrid } from "lucide-react";
+import { Search, LogOut, Menu, X, Layers, LayoutGrid, Heart } from "lucide-react";
 
 const Navbar = ({ user }) => {
   const [isOpen, setisOpen] = useState(false);
@@ -25,13 +25,19 @@ const Navbar = ({ user }) => {
               <Layers size={18} className="text-white" />
             </div>
             <h2 className="text-white font-bold text-xl tracking-tighter">
-              Lose<span className="text-red-500"><span className="">R</span>eddit</span>
+              Lose<span className="text-red-500">Reddit</span>
             </h2>
           </Link>
 
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-400">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <Link href="/popular" className="hover:text-white transition-colors">Popular</Link>
+            
+            {/* ADDED: Liked Link (Replacing Popular) */}
+            <Link href="/pages/userlikepage" className="hover:text-white flex items-center gap-1.5 transition-colors">
+              <Heart size={14} className="text-red-500" fill="currentColor" />
+              Liked
+            </Link>
+
             <Link href="/pages/post" className="hover:text-white transition-colors font-bold text-red-500">Create Post</Link>
           </div>
         </div>
@@ -51,18 +57,16 @@ const Navbar = ({ user }) => {
         {/* Right: User Actions */}
         <div className="flex items-center gap-4">
           
-          {/* All Posts Option */}
           <Link 
             href="/pages/getAllPostsMe" 
             className="hidden sm:flex items-center gap-2 text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full transition-all text-sm font-medium border border-white/5"
           >
             <LayoutGrid size={16} />
-            <span>All Posts</span>
+            <span>My Stories</span>
           </Link>
 
           {user ? (
             <div className="flex items-center gap-3">
-              {/* Profile Trigger */}
               <Link href="/pages/profilepage" className="flex items-center gap-2 p-1 pr-3 hover:bg-white/5 rounded-full border border-white/10 transition-all">
                 <div className="w-7 h-7 bg-gradient-to-tr from-red-500 to-orange-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold">
                   {user.username?.charAt(0).toUpperCase()}
@@ -102,20 +106,20 @@ const Navbar = ({ user }) => {
       {/* Mobile Menu Drawer */}
       {isOpen && (
         <div className="md:hidden bg-[#0B0E14] border-t border-white/5 p-6 space-y-6 animate-in slide-in-from-top-2">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
-            <input 
-              type="text" 
-              placeholder="Search..." 
-              className="w-full bg-[#1A1D23] rounded-xl p-3 pl-10 text-sm text-white outline-none"
-            />
-          </div>
           <div className="flex flex-col gap-5 text-gray-400 font-bold text-sm uppercase tracking-widest">
             <Link href="/" onClick={() => setisOpen(false)}>Home</Link>
-            <Link href="/pages/allpostme" onClick={() => setisOpen(false)} className="flex items-center gap-2 text-white">
-              <LayoutGrid size={18} /> All Posts
+            
+            {/* Mobile Liked Link */}
+            <Link href="/pages/userlikepage" onClick={() => setisOpen(false)} className="flex items-center gap-2">
+               <Heart size={18} className="text-red-500" fill="currentColor" /> Liked Stories
             </Link>
+
+            <Link href="/pages/getAllPostsMe" onClick={() => setisOpen(false)} className="flex items-center gap-2">
+              <LayoutGrid size={18} /> My Stories
+            </Link>
+            
             <Link href="/pages/post" onClick={() => setisOpen(false)}>Create Post</Link>
+            
             {user && (
               <button onClick={handleLogout} className="text-red-500 text-left">Logout Account</button>
             )}
