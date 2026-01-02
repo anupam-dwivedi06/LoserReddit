@@ -43,9 +43,9 @@ const SingleStoryPage = () => {
       const res = await fetch(`/api/storypost/storydelete/${id}`,{
         method: "DELETE" 
       }, {credentials:"include"});
-      // console.log("res comes from the handledelte", res)
+      
       const data = await res.json();
-      // console.log("Data comes from the delete route",data);
+      
       if(!res.ok){
         throw new Error("Fail to fetch storydelete route", data.msg);
       }
@@ -75,42 +75,46 @@ const SingleStoryPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0E14] p-6 pt-24">
+    // Changed px-6 to px-4 on mobile to prevent shrinking
+    <div className="min-h-screen bg-[#0B0E14] px-4 md:px-6 pt-24 pb-12">
       <div className="max-w-3xl mx-auto">
         <Link
           href="/pages/getAllPostsMe"
-          className="flex items-center gap-2 text-gray-500 hover:text-white mb-8 font-bold text-sm"
+          className="flex items-center gap-2 text-gray-500 hover:text-white mb-6 md:mb-8 font-bold text-sm transition-colors"
         >
           <ArrowLeft size={16} /> Back to My Stories
         </Link>
 
-        <article className="bg-[#11141B] border border-white/5 rounded-[2.5rem] overflow-hidden">
-          <div className="h-3 bg-red-600" />
+        {/* Adjusted rounding: rounded-2xl on mobile, 2.5rem on desktop */}
+        <article className="bg-[#11141B] border border-white/5 rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-2xl">
+          <div className="h-2 md:h-3 bg-red-600" />
 
-          <div className="p-8 md:p-12">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="px-4 py-1.5 bg-red-600/10 border border-red-500/20 text-red-500 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2">
+          {/* Adjusted padding: p-5 on mobile, p-12 on desktop */}
+          <div className="p-5 md:p-12">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <span className="px-3 py-1.5 bg-red-600/10 border border-red-500/20 text-red-500 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest flex items-center gap-2">
                 <Tag size={12} /> {post.category}
               </span>
-              <span className="text-gray-600 text-xs font-bold uppercase flex items-center gap-2">
+              <span className="text-gray-600 text-[10px] md:text-xs font-bold uppercase flex items-center gap-2">
                 <Calendar size={12} />{" "}
                 {new Date(post.createdAt).toLocaleDateString()}
               </span>
             </div>
 
-            <h1 className="text-4xl font-black text-white mb-8">
+            <h1 className="text-2xl md:text-4xl font-black text-white mb-6 md:mb-8 leading-tight">
               {post.title}
             </h1>
 
-            <p className="text-gray-300 text-lg whitespace-pre-wrap">
+            <p className="text-gray-300 text-base md:text-lg whitespace-pre-wrap leading-relaxed opacity-90">
               {post.story}
             </p>
           </div>
         </article>
-        <div className="mt-8 flex justify-end">
+
+        <div className="mt-6 md:mt-8 flex justify-end">
           <button 
             onClick={handledelete}
-            className="flex items-center gap-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 px-6 py-3 rounded-2xl transition-all font-bold text-sm border border-transparent hover:border-red-500/20"
+            className="flex items-center gap-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 px-5 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl transition-all font-bold text-xs md:text-sm border border-transparent hover:border-red-500/20 active:scale-95"
           >
             <Trash2 size={18} />
             Delete Story
