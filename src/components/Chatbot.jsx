@@ -32,22 +32,27 @@ const Chatbot = () => {
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
 
-  // 1. Load chat history from LocalStorage on mount
+  // 1. Fetch chat history from MongoDB on mount
   useEffect(() => {
-    const savedChat = localStorage.getItem("lose_reddit_chat");
-    if (savedChat) {
-      // Mark all saved messages as NOT new so they don't re-animate
-      const parsed = JSON.parse(savedChat).map(msg => ({ ...msg, isNew: false }));
-      setMessages(parsed);
-    }
-  }, []);
+    const fetchHistory = async () => {
+      try {
+        const res = await fetch("/api/chatfetch"); // Calls the GET method in your route
+        const data = await res.json();
+        if (data.messages) {
+          // Map database messages and ensure they don't re-animate
+          const history = data.messages.map((msg) => ({
+            ...msg,
+            isNew: false, 
+          }));
+          setMessages(history);
+        }
+      } catch (err) {
+        console.error("Failed to load history from DB", err);
+      }
+    };
 
-  // 2. Save chat history to LocalStorage whenever messages change
-  useEffect(() => {
-    if (messages.length > 0) {
-      localStorage.setItem("lose_reddit_chat", JSON.stringify(messages));
-    }
-  }, [messages]);
+    fetchHistory();
+  }, []);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -59,6 +64,7 @@ const Chatbot = () => {
   const handleSend = async () => {
     if (!input.trim()) return;
 
+    // Immediately show user message in UI
     const userMsg = { role: "user", text: input, isNew: false };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
@@ -71,18 +77,32 @@ const Chatbot = () => {
         body: JSON.stringify({ message: input }),
       });
       const data = await res.json();
-      // Mark AI message as IS NEW so it types out
-      setMessages((prev) => [...prev, { role: "ai", text: data.reply, isNew: true }]);
+
+      // Add AI response as "isNew" to trigger typing animation
+      setMessages((prev) => [
+        ...prev,
+        { role: "ai", text: data.reply, isNew: true },
+      ]);
     } catch (err) {
-      setMessages((prev) => [...prev, { role: "ai", text: "Error connecting to AI.", isNew: false }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "ai", text: "I'm having trouble connecting to my brain. Try again?", isNew: false },
+      ]);
     } finally {
       setLoading(false);
     }
   };
 
-  const clearChat = () => {
-    setMessages([]);
-    localStorage.removeItem("lose_reddit_chat");
+  const clearChat = async () => {
+    if (!window.confirm("Are you sure you want to delete your chat history?")) return;
+    
+    try {
+      // You can implement a DELETE method in /api/chatbot to clear DB
+      await fetch("/api/deletechat", { method: "DELETE" });
+      setMessages([]);
+    } catch (err) {
+      console.error("Failed to clear chat", err);
+    }
   };
 
   const markAsDone = (index) => {
@@ -108,7 +128,7 @@ const Chatbot = () => {
                 <span className="text-white font-black text-xs uppercase tracking-tighter">LoseReddit AI Assistant</span>
               </div>
               <div className="flex gap-3">
-                <button onClick={clearChat} title="Clear Chat">
+                <button onClick={clearChat} title="Clear Chat History">
                   <Trash2 size={18} className="text-white/80 hover:text-white transition-colors" />
                 </button>
                 <button onClick={() => setIsOpen(false)} className="hover:rotate-90 transition-transform">
@@ -119,6 +139,11 @@ const Chatbot = () => {
 
             {/* Messages Area */}
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-[#0B0E14]">
+              {messages.length === 0 && !loading && (
+                <div className="text-center text-gray-500 mt-10 text-xs uppercase tracking-widest opacity-50">
+                  No previous history. Say hello!
+                </div>
+              )}
               {messages.map((m, i) => (
                 <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${
