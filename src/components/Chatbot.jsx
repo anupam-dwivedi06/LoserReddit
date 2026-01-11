@@ -8,7 +8,7 @@ import remarkGfm from "remark-gfm";
 // Typing Animation Component
 const Typewriter = ({ text, speed = 15, onComplete }) => {
   const [displayedText, setDisplayedText] = useState("");
-  
+
   useEffect(() => {
     let i = 0;
     const timer = setInterval(() => {
@@ -22,7 +22,9 @@ const Typewriter = ({ text, speed = 15, onComplete }) => {
     return () => clearInterval(timer);
   }, [text, speed, onComplete]);
 
-  return <ReactMarkdown remarkPlugins={[remarkGfm]}>{displayedText}</ReactMarkdown>;
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>{displayedText}</ReactMarkdown>
+  );
 };
 
 const Chatbot = () => {
@@ -42,7 +44,7 @@ const Chatbot = () => {
           // Map database messages and ensure they don't re-animate
           const history = data.messages.map((msg) => ({
             ...msg,
-            isNew: false, 
+            isNew: false,
           }));
           setMessages(history);
         }
@@ -86,7 +88,11 @@ const Chatbot = () => {
     } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: "I'm having trouble connecting to my brain. Try again?", isNew: false },
+        {
+          role: "ai",
+          text: "I'm having trouble connecting to my brain. Try again?",
+          isNew: false,
+        },
       ]);
     } finally {
       setLoading(false);
@@ -94,8 +100,9 @@ const Chatbot = () => {
   };
 
   const clearChat = async () => {
-    if (!window.confirm("Are you sure you want to delete your chat history?")) return;
-    
+    if (!window.confirm("Are you sure you want to delete your chat history?"))
+      return;
+
     try {
       // You can implement a DELETE method in /api/chatbot to clear DB
       await fetch("/api/deletechat", { method: "DELETE" });
@@ -125,37 +132,60 @@ const Chatbot = () => {
             <div className="bg-red-600 p-5 flex justify-between items-center shadow-lg">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-white font-black text-xs uppercase tracking-tighter">LoseReddit AI Assistant</span>
+                <span className="text-white font-black text-xs uppercase tracking-tighter">
+                  LoseReddit AI Assistant
+                </span>
               </div>
               <div className="flex gap-3">
                 <button onClick={clearChat} title="Clear Chat History">
-                  <Trash2 size={18} className="text-white/80 hover:text-white transition-colors" />
+                  <Trash2
+                    size={18}
+                    className="text-white/80 hover:text-white transition-colors"
+                  />
                 </button>
-                <button onClick={() => setIsOpen(false)} className="hover:rotate-90 transition-transform">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="hover:rotate-90 transition-transform"
+                >
                   <X size={20} className="text-white" />
                 </button>
               </div>
             </div>
 
             {/* Messages Area */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-[#0B0E14]">
+            <div
+              ref={scrollRef}
+              className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide bg-[#0B0E14]"
+            >
               {messages.length === 0 && !loading && (
                 <div className="text-center text-gray-500 mt-10 text-xs uppercase tracking-widest opacity-50">
                   No previous history. Say hello!
                 </div>
               )}
               {messages.map((m, i) => (
-                <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                    m.role === "user" 
-                      ? "bg-red-600 text-white rounded-tr-none" 
-                      : "bg-white/5 text-gray-200 border border-white/10 rounded-tl-none"
-                  }`}>
+                <div
+                  key={i}
+                  className={`flex ${
+                    m.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                      m.role === "user"
+                        ? "bg-red-600 text-white rounded-tr-none"
+                        : "bg-white/5 text-gray-200 border border-white/10 rounded-tl-none"
+                    }`}
+                  >
                     <div className="prose prose-sm prose-invert max-w-none">
                       {m.role === "ai" && m.isNew ? (
-                        <Typewriter text={m.text} onComplete={() => markAsDone(i)} />
+                        <Typewriter
+                          text={m.text}
+                          onComplete={() => markAsDone(i)}
+                        />
                       ) : (
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {m.text}
+                        </ReactMarkdown>
                       )}
                     </div>
                   </div>
@@ -179,10 +209,13 @@ const Chatbot = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 placeholder="Type a message..."
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-1 focus:ring-red-500 transition-all"
+                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 
+             /* This is the fix: 16px on mobile, 14px (sm) on desktop */
+             text-[16px] md:text-sm 
+             text-white focus:outline-none focus:ring-1 focus:ring-red-500 transition-all"
               />
-              <button 
-                onClick={handleSend} 
+              <button
+                onClick={handleSend}
                 disabled={loading}
                 className="bg-red-600 p-3 rounded-xl text-white hover:bg-red-700 disabled:opacity-50 transition-all shadow-md active:scale-90"
               >
